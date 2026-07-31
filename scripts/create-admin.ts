@@ -122,11 +122,12 @@ async function main() {
       fail(`Could not create the account: ${createError?.message ?? 'unknown error'}`);
     }
 
-    // The trigger inserts a suspended profile; promote it to an active account
-    // (and to owner, if this is the first one).
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .update({
+    // Upsert rather than update: the auth.users trigger may not exist (Supabase
+    // usually refuses to let us attach one), so the profile row may not be there
+    // yet. This works either way.
+    const { error: profileError } = await supabase.from('profiles').upsert(
+      {
+        id: created.user.id,
         full_name: fullName,
         email,
         role,
@@ -134,8 +135,9 @@ async function main() {
         is_owner: isFirstOwner,
         is_break_glass: role === 'teacher_sponsor',
         school_year_started: currentSchoolYear(),
-      })
-      .eq('id', created.user.id);
+      },
+      { onConflict: 'id' }
+    );
 
     if (profileError) {
       fail(

@@ -704,6 +704,26 @@ begin
 end;
 $$;
 
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute function public.handle_new_user();
+-- Supabase owns `auth.users`, and most projects do not grant the SQL Editor
+-- enough privilege to attach a trigger to it. That is fine: this trigger is a
+-- convenience, not a requirement. `create:admin` and the officer invite flow
+-- both upsert the profile row themselves, so account creation works whether or
+-- not this succeeds.
+--
+-- Wrapped so a permission error prints a notice instead of aborting the whole
+-- migration partway through.
+do $$
+begin
+  execute '
+    create trigger on_auth_user_created
+      after insert on auth.users
+      for each row execute function public.handle_new_user()';
+  raise notice 'auth.users trigger installed.';
+exception
+  when insufficient_privilege then
+    raise notice
+      'Skipped the auth.users trigger (no permission on auth.users). This is expected on Supabase and is NOT a problem — profile rows are created by the application instead.';
+  when duplicate_object then
+    raise notice 'auth.users trigger already exists.';
+end;
+$$;

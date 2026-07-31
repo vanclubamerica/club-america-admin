@@ -30,7 +30,23 @@ The files in `supabase/migrations/` create every table, permission rule, and saf
    - `0003_storage.sql`
    - `0004_seed.sql`
 
-Each should report success. If one fails, stop and fix it before continuing — later files depend on earlier ones.
+Each should report success. If one reports an **error**, stop and fix it before continuing — later files depend on earlier ones.
+
+### Notices you can safely ignore
+
+Supabase owns two tables that it does not let the SQL Editor modify: `auth.users` and `storage.objects`. The migrations handle this — they print a notice and carry on instead of failing.
+
+You may see either of these. **Both are expected and neither is a problem:**
+
+> `NOTICE: Skipped the auth.users trigger (no permission on auth.users). This is expected on Supabase and is NOT a problem — profile rows are created by the application instead.`
+
+Nothing to do. `npm run create:admin` and the officer invite flow create profile rows themselves.
+
+> `NOTICE: Skipped N storage policy statement(s) — this project does not allow creating policies on storage.objects from SQL.`
+
+If you see this one, you **do** need to add the storage policies by hand. Open **Storage → Policies** in the dashboard and create them exactly as listed in the comment at the bottom of `0003_storage.sql`. Without them, image and document uploads will be rejected.
+
+The difference: a **NOTICE** is informational and the migration continued. An **ERROR** means it stopped.
 
 > **What 0002 does, and why it matters:** it makes the activity log permanently append-only using database triggers. After running it, *nobody* can edit or delete a log entry — not officers, not the owner, not even someone holding the service role key. That is deliberate. If an account is ever compromised, this history is how you find out what happened.
 

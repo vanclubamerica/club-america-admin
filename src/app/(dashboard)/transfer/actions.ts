@@ -51,17 +51,20 @@ export async function inviteOfficer(_prev: ActionState, formData: FormData): Pro
       return { error: `Could not send the invitation: ${createError?.message ?? 'unknown error'}` };
     }
 
-    const { error: profileError } = await admin
-      .from('profiles')
-      .update({
+    // Upsert, not update: the auth.users trigger may not exist on this Supabase
+    // project, in which case no profile row has been created yet.
+    const { error: profileError } = await admin.from('profiles').upsert(
+      {
+        id: created.user.id,
         full_name: fullName,
         email,
         role,
         status: 'active',
         must_change_password: true,
         school_year_started: currentSchoolYear(),
-      })
-      .eq('id', created.user.id);
+      },
+      { onConflict: 'id' }
+    );
 
     if (profileError) {
       return { error: `The invitation was sent but the profile could not be set up: ${profileError.message}` };
