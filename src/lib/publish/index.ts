@@ -14,7 +14,14 @@ import type {
   Sponsor,
   Theme,
 } from '@/types/database';
-import { commitFiles, getBranchHead, getFiles, repoConfig, GitHubError } from './github';
+import {
+  commitFiles,
+  getBranchHead,
+  getFiles,
+  listRepoPaths,
+  repoConfig,
+  GitHubError,
+} from './github';
 import { hasRegion, replaceRegion } from './markers';
 import { ALL_PAGES, REGIONS, REGIONS_BY_KEY, type RegionDef } from './regions';
 import {
@@ -29,6 +36,7 @@ import {
   renderOfficersMain,
   renderSponsorGrid,
 } from './renderers';
+import { sanitizeAssetPath } from './sanitize';
 import { renderThemeCss } from './theme-css';
 
 /**
@@ -65,6 +73,13 @@ export interface PublishPlan {
   unchanged: string[];
   headSha: string;
   warnings: string[];
+  /**
+   * Images referenced by the content that are not yet committed to the website
+   * repository. Uploaded files live in Supabase Storage; the published HTML
+   * points at repo-relative paths, so they have to be copied across or the
+   * public site shows broken images.
+   */
+  mediaToUpload: string[];
 }
 
 export interface PublishOutcome {
@@ -263,7 +278,39 @@ export async function buildPublishPlan(content: SiteContent): Promise<PublishPla
     unchanged.push(THEME_CSS_PATH);
   }
 
-  return { changes, unchanged, headSha: head.commitSha, warnings };
+  // Which referenced images still need copying from Storage into the repo?
+  const existing = await listRepoPaths(head.treeSha);
+  const mediaToUpload = referencedMedia(content).filter((path) => !existing.has(path));
+
+  return { changes, unchanged, headSha: head.commitSha, warnings, mediaToUpload };
+}
+
+/**
+ * Every repo-relative image path the rendered site will point at.
+ *
+ * Paths are run through sanitizeAssetPath first, so anything that could escape
+ * the media folder is dropped before it can reach a commit.
+ */
+export function referencedMedia(content: SiteContent): string[] {
+  const paths = new Set<string>();
+
+  const add = (value: string | null | undefined) => {
+    const safe = sanitizeAssetPath(value);
+    if (safe) paths.add(safe);
+  };
+
+  for (const officer of content.officers) {
+    if (officer.is_active) add(officer.photo_path);
+  }
+  for (const sponsor of content.sponsors) {
+    if (sponsor.is_active) add(sponsor.logo_path);
+  }
+  for (const post of content.news) {
+    if (post.status === 'published') add(post.image_path);
+  }
+  add(content.theme?.logo_path);
+
+  return [...paths];
 }
 
 /** Renders a single page's final HTML, for the preview iframe. */
@@ -320,7 +367,7 @@ export async function publishSite(options: {
   }
 
   // Nothing to do — report it rather than creating an empty commit.
-  if (plan.changes.length === 0) {
+  if (plan.changes.length === 0 && plan.mediaToUpload.length === 0) {
     await admin
       .from('publish_jobs')
       .update({ status: 'success', finished_at: new Date().toISOString() })
@@ -330,8 +377,14 @@ export async function publishSite(options: {
   }
 
   try {
+    // Pull the image bytes out of Storage so they land in the SAME commit as
+    // the HTML that references them. Doing this as a separate commit would
+    // leave the live site with broken images in between.
+    const binaryFiles = await downloadMedia(supabase, plan.mediaToUpload);
+
     const result = await commitFiles({
       files: plan.changes.map((c) => ({ path: c.path, content: c.content })),
+      binaryFiles,
       message: commitMessage,
       branch,
       expectedHeadSha: plan.headSha,
@@ -403,6 +456,36 @@ export async function publishSite(options: {
 
     throw err;
   }
+}
+
+/**
+ * Fetches uploaded images from Supabase Storage as base64, ready to commit.
+ *
+ * A missing object is skipped with a warning rather than failing the publish:
+ * one absent image should not block a text correction from going live, and the
+ * broken reference is visible and fixable from the dashboard.
+ */
+async function downloadMedia(
+  supabase: Client,
+  paths: string[]
+): Promise<Array<{ path: string; base64: string }>> {
+  const files: Array<{ path: string; base64: string }> = [];
+
+  for (const path of paths) {
+    // The Storage object key and the repo path are deliberately identical,
+    // so the same string works in both systems.
+    const { data, error } = await supabase.storage.from('media').download(path);
+
+    if (error || !data) {
+      console.error(`[publish] could not read ${path} from storage`, error);
+      continue;
+    }
+
+    const buffer = Buffer.from(await data.arrayBuffer());
+    files.push({ path, base64: buffer.toString('base64') });
+  }
+
+  return files;
 }
 
 /** Freezes the published state into content_versions for later restore. */

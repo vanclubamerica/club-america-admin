@@ -122,6 +122,36 @@ export async function getFiles(
   return Object.fromEntries(entries);
 }
 
+/**
+ * Every file path in the repository at a given tree.
+ *
+ * One API call instead of probing paths individually, which matters because
+ * publishing needs to know which referenced images are already committed.
+ */
+export async function listRepoPaths(treeSha: string): Promise<Set<string>> {
+  const { owner, repo } = repoConfig();
+
+  try {
+    const { data } = await octokit().git.getTree({
+      owner,
+      repo,
+      tree_sha: treeSha,
+      recursive: 'true',
+    });
+
+    return new Set(
+      (data.tree ?? [])
+        .filter((entry) => entry.type === 'blob' && typeof entry.path === 'string')
+        .map((entry) => entry.path as string)
+    );
+  } catch (err) {
+    throw new GitHubError(
+      `Could not list the website's files: ${describeGitHubError(err)}`,
+      err
+    );
+  }
+}
+
 /** Current head commit of the target branch. */
 export async function getBranchHead(branch?: string): Promise<{
   commitSha: string;

@@ -96,7 +96,10 @@ export async function getPublishPreview(): Promise<PreviewSummary> {
 
     return {
       ready: true,
-      changedFiles: plan.changes.map((c) => c.path),
+      // Newly uploaded images are shown alongside the pages, because they are
+      // part of the same commit and an officer who just added a photo should
+      // see it listed.
+      changedFiles: [...plan.changes.map((c) => c.path), ...plan.mediaToUpload],
       unchangedFiles: plan.unchanged,
       warnings: plan.warnings,
     };
