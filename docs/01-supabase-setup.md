@@ -32,6 +32,8 @@ The files in `supabase/migrations/` create every table, permission rule, and saf
 
 Each should report success. If one reports an **error**, stop and fix it before continuing — later files depend on earlier ones.
 
+The SQL Editor runs each script as a single transaction, so a script that errors leaves **nothing** behind — you do not need to clean up before retrying. Just fix the cause and run the whole file again.
+
 ### Notices you can safely ignore
 
 Supabase owns two tables that it does not let the SQL Editor modify: `auth.users` and `storage.objects`. The migrations handle this — they print a notice and carry on instead of failing.

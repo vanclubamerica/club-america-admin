@@ -80,6 +80,45 @@ create index profiles_status_idx on public.profiles (status);
 create trigger profiles_touch before update on public.profiles
   for each row execute function public.touch_updated_at();
 
+-- =============================================================================
+-- settings — single row of global configuration
+-- =============================================================================
+create table public.settings (
+  id                    boolean primary key default true check (id),
+
+  publishing_enabled    boolean not null default true,
+  emergency_lock        boolean not null default false,
+  emergency_lock_reason text,
+  emergency_locked_at   timestamptz,
+  emergency_locked_by   uuid references public.profiles(id) on delete set null,
+
+  active_theme_key      text not null default 'normal',
+
+  site_title            text not null default 'Club America — Van High School Chapter',
+  meeting_day           text default 'Every Friday',
+  meeting_time          text default '10:20 – 10:50 AM',
+  meeting_location      text default 'College Career Center A',
+
+  contact_email         text,
+  contact_address_line1 text default '985 N Maple St',
+  contact_address_line2 text default 'Van, TX 75790',
+
+  social_instagram      text default 'https://www.instagram.com/clubamericavan/',
+  social_tiktok         text default 'https://www.tiktok.com/@clubamericavan',
+  social_facebook       text default 'https://www.facebook.com/people/Van-High-School-Club-America/61592382360749/',
+
+  google_calendar_id    text,
+
+  last_published_at     timestamptz,
+  last_published_sha    text,
+
+  updated_at            timestamptz not null default now(),
+  updated_by            uuid references public.profiles(id) on delete set null
+);
+
+create trigger settings_touch before update on public.settings
+  for each row execute function public.touch_updated_at();
+
 -- -----------------------------------------------------------------------------
 -- Permission helpers
 --
@@ -136,44 +175,6 @@ as $$
   select public.is_active_admin() and public.content_unlocked();
 $$;
 
--- =============================================================================
--- settings — single row of global configuration
--- =============================================================================
-create table public.settings (
-  id                    boolean primary key default true check (id),
-
-  publishing_enabled    boolean not null default true,
-  emergency_lock        boolean not null default false,
-  emergency_lock_reason text,
-  emergency_locked_at   timestamptz,
-  emergency_locked_by   uuid references public.profiles(id) on delete set null,
-
-  active_theme_key      text not null default 'normal',
-
-  site_title            text not null default 'Club America — Van High School Chapter',
-  meeting_day           text default 'Every Friday',
-  meeting_time          text default '10:20 – 10:50 AM',
-  meeting_location      text default 'College Career Center A',
-
-  contact_email         text,
-  contact_address_line1 text default '985 N Maple St',
-  contact_address_line2 text default 'Van, TX 75790',
-
-  social_instagram      text default 'https://www.instagram.com/clubamericavan/',
-  social_tiktok         text default 'https://www.tiktok.com/@clubamericavan',
-  social_facebook       text default 'https://www.facebook.com/people/Van-High-School-Club-America/61592382360749/',
-
-  google_calendar_id    text,
-
-  last_published_at     timestamptz,
-  last_published_sha    text,
-
-  updated_at            timestamptz not null default now(),
-  updated_by            uuid references public.profiles(id) on delete set null
-);
-
-create trigger settings_touch before update on public.settings
-  for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- content_blocks — prose regions keyed to markers in the public HTML
