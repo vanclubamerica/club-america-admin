@@ -1,0 +1,277 @@
+{
+  "generatedAt": "2026-07-31T02:21:44.035Z",
+  "sourcePath": "C:\\Users\\brant\\clubamerica",
+  "settings": {
+    "meeting_day": "Friday",
+    "meeting_time": "10:20 – 10:50 AM",
+    "meeting_location": "College Career Center A",
+    "contact_address_line1": "985 N Maple St",
+    "contact_address_line2": "Van, TX 75790",
+    "social_instagram": "https://www.instagram.com/clubamericavan/",
+    "social_tiktok": "https://www.tiktok.com/@clubamericavan",
+    "social_facebook": "https://www.facebook.com/people/Van-High-School-Club-America/61592382360749/"
+  },
+  "officers": [
+    {
+      "tier": "main",
+      "role_key": "president",
+      "position_title": "President",
+      "name": "Brant Borden",
+      "bio": "Leads weekly meetings and represents the chapter to the school and the community. Coordinates with the national Club America organization and oversees the officer team.",
+      "photo_path": "media/officers/president.jpg",
+      "photo_alt": "Portrait of the Club America President",
+      "sort_order": 0
+    },
+    {
+      "tier": "main",
+      "role_key": "vice_president",
+      "position_title": "Vice President",
+      "name": "Boe Hanson",
+      "bio": "Supports the President, steps in to run meetings when needed, and leads planning for guest speakers and special events.",
+      "photo_path": "media/officers/vp.jpg",
+      "photo_alt": "Portrait of the Club America Vice President",
+      "sort_order": 0
+    },
+    {
+      "tier": "main",
+      "role_key": "secretary",
+      "position_title": "Secretary",
+      "name": "Alejandro Agudelo",
+      "bio": "Keeps meeting notes, manages communication between officers, and helps maintain the chapter calendar.",
+      "photo_path": "media/officers/secretary.jpg",
+      "photo_alt": "Portrait of the Club America Secretary",
+      "sort_order": 0
+    },
+    {
+      "tier": "main",
+      "role_key": "treasurer",
+      "position_title": "Treasurer",
+      "name": "OPEN POSITION",
+      "bio": "Tracks chapter funds, coordinates with sponsors, and manages budgets for events and community projects.",
+      "photo_path": "media/officers/treasurer.jpg",
+      "photo_alt": "Portrait of the Club America Treasurer",
+      "sort_order": 0
+    },
+    {
+      "tier": "main",
+      "role_key": "teacher_sponsor",
+      "position_title": "Teacher Sponsor",
+      "name": "Timothy Taylor",
+      "bio": "A Van High School faculty member who supports the chapter, oversees meetings, and advises the student officer team.",
+      "photo_path": "media/officers/sponsor.jpg",
+      "photo_alt": "Portrait of the Club America Teacher Sponsor",
+      "sort_order": 0
+    },
+    {
+      "tier": "lower",
+      "role_key": null,
+      "position_title": "Historian",
+      "name": "Mason Mitchell",
+      "bio": null,
+      "photo_path": "media/officers/historian.jpg",
+      "photo_alt": "Portrait of the Club America Historian",
+      "sort_order": 0
+    }
+  ],
+  "sponsors": [
+    {
+      "name": "Sponsor 1",
+      "logo_path": "media/sponsors/sponsor-1.png",
+      "logo_alt": "Sponsor logo",
+      "tier": "bronze",
+      "sort_order": 0,
+      "show_in_footer": true
+    },
+    {
+      "name": "Sponsor 2",
+      "logo_path": "media/sponsors/sponsor-2.png",
+      "logo_alt": "Sponsor logo",
+      "tier": "bronze",
+      "sort_order": 1,
+      "show_in_footer": true
+    },
+    {
+      "name": "Sponsor 3",
+      "logo_path": "media/sponsors/sponsor-3.png",
+      "logo_alt": "Sponsor logo",
+      "tier": "bronze",
+      "sort_order": 2,
+      "show_in_footer": false
+    }
+  ],
+  "news": [
+    {
+      "title": "Welcome to the 2026–2027 School Year",
+      "body": "<p>Club America is back for another year at Van High School. We're excited to welcome returning members and meet new students at our first meeting of the year. Come learn what we have planned for the fall semester.</p>",
+      "display_date": "August 2026",
+      "published_on": "2026-08-01",
+      "status": "published"
+    },
+    {
+      "title": "Upcoming Meetings",
+      "body": "<p>Meetings resume every Friday from 10:20 to 10:50 AM in College Career Center A. Check the Events page for the full calendar and any schedule changes.</p>",
+      "display_date": "August 2026",
+      "published_on": "2026-08-01",
+      "status": "published"
+    },
+    {
+      "title": "Club Announcements",
+      "body": "<p>Officer applications and sponsor outreach for the new school year are underway. Interested students and community members can reach out through our Contact page.</p>",
+      "display_date": "July 2026",
+      "published_on": "2026-07-01",
+      "status": "published"
+    }
+  ],
+  "events": [
+    {
+      "title": "Welcome Back Meeting & Officer Introductions",
+      "description": "Kick off the 2026–2027 school year, meet this year's officers, and find out what's ahead.",
+      "location": "College Career Center A",
+      "starts_at": "2026-08-15T15:20:00.000Z",
+      "source": "manual"
+    },
+    {
+      "title": "Current Events Roundtable",
+      "description": "An open discussion on the week's biggest news stories, moderated by the officer team.",
+      "location": "College Career Center A",
+      "starts_at": "2026-08-22T15:20:00.000Z",
+      "source": "manual"
+    },
+    {
+      "title": "Guest Speaker: Local City Council Member",
+      "description": "An open conversation about how local government works and how students can get involved.",
+      "location": "College Career Center A",
+      "starts_at": "2026-08-29T15:20:00.000Z",
+      "source": "manual"
+    },
+    {
+      "title": "Meeting: Odd 1 Out - Spot the Mole",
+      "description": "A strategy game where players debate, vote, and identify the Odd 1 Out.",
+      "location": "College Career Center A",
+      "starts_at": "2026-08-29T15:20:00.000Z",
+      "source": "manual"
+    },
+    {
+      "title": "Community Service Project Planning",
+      "description": "Members pitch and plan this semester's community project.",
+      "location": "College Career Center A",
+      "starts_at": "2026-09-12T15:20:00.000Z",
+      "source": "manual"
+    },
+    {
+      "title": "Meeting: Build a Politician",
+      "description": "Build a candidate, run your campaign, and compete for the most votes.",
+      "location": "College Career Center A",
+      "starts_at": "2026-09-12T15:20:00.000Z",
+      "source": "manual"
+    },
+    {
+      "title": "Officer Elections Info Session",
+      "description": "Learn how officer elections work and how to run for a leadership role.",
+      "location": "College Career Center A",
+      "starts_at": "2026-09-26T15:20:00.000Z",
+      "source": "manual"
+    }
+  ],
+  "blocks": [
+    {
+      "key": "why-join",
+      "page": "index.html",
+      "label": "Homepage — why join cards",
+      "kind": "prose",
+      "data": {
+        "html": "<div class=\"grid grid--4\">\r\n  <div class=\"card reveal\">\r\n    <div class=\"card__icon\" aria-hidden=\"true\">\r\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2l2.5 5.5L20 8.5l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-1L12 2z\"/></svg>\r\n    </div>\r\n    <h3>Leadership</h3>\r\n    <p>Run meetings, lead projects, and take on officer roles that build real, practical leadership experience.</p>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <div class=\"card__icon\" aria-hidden=\"true\">\r\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"9\" cy=\"8\" r=\"3\"/><path d=\"M2 20c0-3.3 3-6 7-6s7 2.7 7 6\"/><circle cx=\"17\" cy=\"8\" r=\"2.4\"/><path d=\"M17.5 12.5c2.6.5 4.5 2.7 4.5 5.5\"/></svg>\r\n    </div>\r\n    <h3>Community</h3>\r\n    <p>Take part in service projects and events that make a visible difference at Van High School and beyond.</p>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <div class=\"card__icon\" aria-hidden=\"true\">\r\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"6\" cy=\"6\" r=\"2.5\"/><circle cx=\"18\" cy=\"6\" r=\"2.5\"/><circle cx=\"12\" cy=\"18\" r=\"2.5\"/><path d=\"M8.2 7.3L10 16M15.8 7.3L14 16M8.5 6h7\"/></svg>\r\n    </div>\r\n    <h3>Networking</h3>\r\n    <p>Meet fellow students, teachers, guest speakers, and local sponsors who share an interest in civic life.</p>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <div class=\"card__icon\" aria-hidden=\"true\">\r\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 5.5A2.5 2.5 0 016.5 3H19v16H6.5A2.5 2.5 0 004 16.5v-11z\"/><path d=\"M8 8h7M8 12h7\"/></svg>\r\n    </div>\r\n    <h3>Learning</h3>\r\n    <p>Learn about government, economics, history, and current events through free discussion.</p>\r\n  </div>\r\n</div>"
+      }
+    },
+    {
+      "key": "about-preview",
+      "page": "index.html",
+      "label": "Homepage — about summary",
+      "kind": "prose",
+      "data": {
+        "html": "<div class=\"grid grid--2\" style=\"align-items:center; gap:3rem;\">\r\n  <div class=\"reveal\">\r\n    <div class=\"record-label\">Who We Are</div>\r\n    <h2>A student-run chapter of the national Club America organization</h2>\r\n    <p>Club America at Van High School gives students a place to lead, learn, and get involved close to home. We're a chapter of the national Club America organization, but every meeting, event, and decision here is planned and run by Van High School students.</p>\r\n    <p>Members explore government, economics, history, and current events through honest discussion, guest speakers, and hands-on projects while building the kind of leadership and communication skills that carry well beyond high school.</p>\r\n    <a href=\"about.html\" class=\"btn btn--outline\">Learn More About Us</a>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <div class=\"card__icon\" aria-hidden=\"true\">\r\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7l8-4z\"/></svg>\r\n    </div>\r\n    <h3>Our Purpose</h3>\r\n    <p>To develop confident, informed student leaders who understand how government and community work and who are ready to contribute to both.</p>\r\n  </div>\r\n</div>"
+      }
+    },
+    {
+      "key": "hero",
+      "page": "index.html",
+      "label": "Homepage hero",
+      "kind": "prose",
+      "data": {
+        "html": "<div class=\"hero__content\">\r\n  <span class=\"hero__eyebrow\">Van High School &middot; Van, Texas</span>\r\n  <h1>Club America</h1>\r\n  <p class=\"hero__tagline\">Student Leadership. Civic Engagement. Community Impact.</p>\r\n  <div class=\"hero__actions\">\r\n    <a href=\"join.html\" class=\"btn btn--primary\">Join Now</a>\r\n    <a href=\"events.html\" class=\"btn btn--secondary\">View Events</a>\r\n  </div>\r\n</div>"
+      }
+    },
+    {
+      "key": "about-semester",
+      "page": "about.html",
+      "label": "About — typical semester",
+      "kind": "prose",
+      "data": {
+        "html": "<div class=\"grid grid--2\" style=\"gap:1.5rem;\">\r\n  <div class=\"card reveal\">\r\n    <h3>Meetings &amp; Discussions</h3>\r\n    <p>Every Friday, members gather for a focused 30-minute meeting built around a current event, historical topic, or piece of local government, always with room for open, respectful discussion.</p>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <h3>Guest Speakers</h3>\r\n    <p>Throughout the year we invite local officials, community leaders, and professionals to share perspective on government, economics, and civic life.</p>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <h3>Community Projects</h3>\r\n    <p>Members plan and carry out service projects that give back to Van and build practical experience in organizing and teamwork.</p>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <h3>Leadership Development</h3>\r\n    <p>Officer roles, committee leads, and event planning give members a chance to practice real leadership, not just hold a title.</p>\r\n  </div>\r\n</div>"
+      }
+    },
+    {
+      "key": "about-cards",
+      "page": "about.html",
+      "label": "About — mission cards",
+      "kind": "prose",
+      "data": {
+        "html": "<div class=\"grid grid--3\">\r\n  <div class=\"card reveal\">\r\n    <div class=\"card__icon\" aria-hidden=\"true\">\r\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 21s-7-4.6-9.5-9C1 8.4 2.6 5 6 5c2 0 3.3 1.1 4 2.2C10.7 6.1 12 5 14 5c3.4 0 5 3.4 3.5 7-2.5 4.4-9.5 9-9.5 9z\"/></svg>\r\n    </div>\r\n    <h3>Our Mission</h3>\r\n    <p>To give Van High School students a genuine voice in civic life, through leadership experience, respectful discussion, and community involvement that starts in high school and lasts well beyond it.</p>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <div class=\"card__icon\" aria-hidden=\"true\">\r\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2l2.5 5.5L20 8.5l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-1L12 2z\"/></svg>\r\n    </div>\r\n    <h3>Our Values</h3>\r\n    <p>Respect for differing opinions, student ownership of every decision, and a commitment to learning that goes beyond the textbook, through real conversation and real projects.</p>\r\n  </div>\r\n  <div class=\"card reveal\">\r\n    <div class=\"card__icon\" aria-hidden=\"true\">\r\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M3 9h18M8 3v3M16 3v3\"/></svg>\r\n    </div>\r\n    <h3>What We Do</h3>\r\n    <p>Weekly meetings, guest speakers, community service projects, current-events discussions, and student-led leadership initiatives throughout the school year.</p>\r\n  </div>\r\n</div>"
+      }
+    },
+    {
+      "key": "about-intro",
+      "page": "about.html",
+      "label": "About — main text",
+      "kind": "prose",
+      "data": {
+        "html": "<div class=\"grid grid--2\" style=\"gap:3rem; align-items:start;\">\r\n  <div class=\"reveal\">\r\n    <div class=\"record-label\">What We Are</div>\r\n    <h2>A chapter of a national organization, run our own way</h2>\r\n    <p>Club America is a student civic organization with chapters at high schools across the country. The Van High School chapter is affiliated with that national organization, which means we share its name and its broader mission, but this chapter operates independently. There is no adult-run agenda handed down to us; our officers set the calendar, choose the discussion topics, and plan the events.</p>\r\n    <p>That independence is what makes this chapter feel different from a typical school club. Members help build the meetings they attend.</p>\r\n  </div>\r\n  <div class=\"reveal\">\r\n    <div class=\"record-label\">What Makes Us Unique</div>\r\n    <h2>Built by Van High School students, for Van High School students</h2>\r\n    <p>Our meetings are short, focused, and student-led, just 30 minutes every Friday, which keeps discussion sharp and easy to fit into a busy school week. Officers rotate responsibility for planning topics, inviting guest speakers, and organizing community projects, so leadership experience isn't limited to one or two people at the top.</p>\r\n    <p>We keep the conversation open to different viewpoints. Civil, respectful discussion is a core part of how we operate.</p>\r\n  </div>\r\n</div>"
+      }
+    },
+    {
+      "key": "about-header",
+      "page": "about.html",
+      "label": "About — page header",
+      "kind": "prose",
+      "data": {
+        "html": "<section class=\"page-header\">\r\n  <div class=\"container\">\r\n    <span class=\"hero__eyebrow\">About the Chapter</span>\r\n    <h1>Student-run. Community-driven.</h1>\r\n    <p>Club America at Van High School is a chapter of the national Club America organization, planned, led, and run entirely by Van High School students.</p>\r\n  </div>\r\n</section>"
+      }
+    },
+    {
+      "key": "officers-header",
+      "page": "officers.html",
+      "label": "Officers — page header",
+      "kind": "prose",
+      "data": {
+        "html": "<section class=\"page-header\">\r\n  <div class=\"container\">\r\n    <span class=\"hero__eyebrow\">Leadership</span>\r\n    <h1>Chapter Officers</h1>\r\n    <p>This year's officer team plans meetings, organizes events, and keeps the chapter running, with guidance from our teacher sponsor.</p>\r\n  </div>\r\n</section>"
+      }
+    },
+    {
+      "key": "sponsors-intro",
+      "page": "sponsors.html",
+      "label": "Sponsors — intro text",
+      "kind": "prose",
+      "data": {
+        "html": "<section class=\"page-header\">\r\n  <div class=\"container\">\r\n    <span class=\"hero__eyebrow\">Partnership</span>\r\n    <h1>Our Sponsors</h1>\r\n    <p>Local businesses and organizations that support Club America's activities, events, and educational opportunities.</p>\r\n  </div>\r\n</section>"
+      }
+    },
+    {
+      "key": "join-benefits",
+      "page": "join.html",
+      "label": "Join — benefits list",
+      "kind": "prose",
+      "data": {
+        "html": "<div class=\"grid\" style=\"gap:1.25rem; margin-top:1.5rem;\">\r\n  <div class=\"card\">\r\n    <h3>Leadership Opportunities</h3>\r\n    <p>Take on officer and committee roles that build practical, resume-ready leadership experience.</p>\r\n  </div>\r\n  <div class=\"card\">\r\n    <h3>Meet Other Students</h3>\r\n    <p>Connect with classmates across grade levels who care about government, current events, and community.</p>\r\n  </div>\r\n  <div class=\"card\">\r\n    <h3>Participate in Events</h3>\r\n    <p>Get involved in guest speaker sessions, service projects, and chapter activities all year long.</p>\r\n  </div>\r\n  <div class=\"card\">\r\n    <h3>Develop Communication Skills</h3>\r\n    <p>Practice public speaking and respectful debate in a supportive, student-led environment.</p>\r\n  </div>\r\n  <div class=\"card\">\r\n    <h3>Build Community Connections</h3>\r\n    <p>Work alongside local sponsors, guest speakers, and community members through chapter events.</p>\r\n  </div>\r\n</div>"
+      }
+    },
+    {
+      "key": "contact-info",
+      "page": "contact.html",
+      "label": "Contact — details",
+      "kind": "prose",
+      "data": {
+        "html": "<section class=\"page-header\">\r\n  <div class=\"container\">\r\n    <span class=\"hero__eyebrow\">Get in Touch</span>\r\n    <h1>Contact Us</h1>\r\n    <p>Questions, meeting ideas, sponsorship inquiries, or general contact &mdash; we'd like to hear from you.</p>\r\n  </div>\r\n</section>"
+      }
+    }
+  ]
+}

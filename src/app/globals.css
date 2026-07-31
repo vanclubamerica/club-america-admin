@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+/**
+ * Design tokens.
+ *
+ * The palette echoes the public site (navy + red civic look) without copying
+ * it — this is a working tool, not a brochure. Contrast targets AA so it stays
+ * readable on classroom projectors and older school laptops.
+ */
+@theme {
+  --color-ink-50: #f6f7f9;
+  --color-ink-100: #eceef2;
+  --color-ink-200: #d5dae3;
+  --color-ink-300: #b0b9c9;
+  --color-ink-400: #8492a8;
+  --color-ink-500: #64748b;
+  --color-ink-600: #4b5769;
+  --color-ink-700: #3a4454;
+  --color-ink-800: #232b38;
+  --color-ink-900: #151b25;
+  --color-ink-950: #0d1219;
+
+  --color-navy-50: #eef3fb;
+  --color-navy-100: #d8e4f6;
+  --color-navy-500: #2d5b9e;
+  --color-navy-600: #234a85;
+  --color-navy-700: #1b3a6b;
+  --color-navy-800: #14294c;
+  --color-navy-900: #0f1f3a;
+
+  --color-flag-50: #fdf2f4;
+  --color-flag-100: #fbe0e4;
+  --color-flag-500: #c8324a;
+  --color-flag-600: #ab2740;
+  --color-flag-700: #8c1f34;
+
+  /* System stack — no external font requests, so the CSP stays same-origin. */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink-50 text-ink-800 font-sans antialiased;
+  }
+
+  /* Visible focus everywhere — officers navigate this with keyboards too. */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-navy-500;
+  }
+
+  ::selection {
+    @apply bg-navy-100;
+  }
+}
+
+@layer components {
+  /* Rich-text editor content, styled to roughly match the public site. */
+  .prose-editor {
+    @apply text-ink-800 leading-relaxed;
+  }
+  .prose-editor p {
+    @apply mb-3;
+  }
+  .prose-editor h2 {
+    @apply text-xl font-bold mt-5 mb-2;
+  }
+  .prose-editor h3 {
+    @apply text-lg font-semibold mt-4 mb-2;
+  }
+  .prose-editor ul {
+    @apply list-disc pl-6 mb-3;
+  }
+  .prose-editor ol {
+    @apply list-decimal pl-6 mb-3;
+  }
+  .prose-editor a {
+    @apply text-navy-600 underline;
+  }
+  .prose-editor blockquote {
+    @apply border-l-4 border-ink-200 pl-4 italic text-ink-600;
+  }
+  .prose-editor:focus {
+    @apply outline-none;
+  }
+  /* TipTap placeholder */
+  .prose-editor p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    @apply text-ink-400 float-left h-0 pointer-events-none;
+  }
+}
+
+/* The preview iframe renders the real public site; keep our styles out of it. */
+.preview-frame {
+  @apply w-full border-0 bg-white;
+}
