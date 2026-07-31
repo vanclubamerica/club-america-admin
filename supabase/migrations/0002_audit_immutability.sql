@@ -37,15 +37,18 @@ begin
 end;
 $$;
 
+drop trigger if exists audit_logs_no_update on public.audit_logs;
 create trigger audit_logs_no_update
   before update on public.audit_logs
   for each row execute function public.reject_audit_mutation();
 
+drop trigger if exists audit_logs_no_delete on public.audit_logs;
 create trigger audit_logs_no_delete
   before delete on public.audit_logs
   for each row execute function public.reject_audit_mutation();
 
 -- TRUNCATE bypasses row-level triggers, so it needs its own statement-level one.
+drop trigger if exists audit_logs_no_truncate on public.audit_logs;
 create trigger audit_logs_no_truncate
   before truncate on public.audit_logs
   for each statement execute function public.reject_audit_mutation();
@@ -56,10 +59,12 @@ create trigger audit_logs_no_truncate
 -- new officer should not be able to erase a predecessor's record by accident.
 -- Versions may be created, never rewritten.
 -- =============================================================================
+drop trigger if exists content_versions_no_update on public.content_versions;
 create trigger content_versions_no_update
   before update on public.content_versions
   for each row execute function public.reject_audit_mutation();
 
+drop trigger if exists leadership_terms_no_delete on public.leadership_terms;
 create trigger leadership_terms_no_delete
   before delete on public.leadership_terms
   for each row execute function public.reject_audit_mutation();

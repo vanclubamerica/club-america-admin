@@ -32,7 +32,18 @@ The files in `supabase/migrations/` create every table, permission rule, and saf
 
 Each should report success. If one reports an **error**, stop and fix it before continuing — later files depend on earlier ones.
 
-The SQL Editor runs each script as a single transaction, so a script that errors leaves **nothing** behind — you do not need to clean up before retrying. Just fix the cause and run the whole file again.
+### If a migration fails partway through
+
+The SQL Editor commits statements as it goes, so a script that errors leaves behind everything it managed to create before failing. Running it again then hits `type "..." already exists` or similar.
+
+The migrations are written to be re-runnable — tables use `create table if not exists`, enums and policies are guarded — so a second run is normally safe.
+
+**But `if not exists` cannot repair a table that was created with an older definition.** If you have already had a failed run and are unsure what state the database is in, start clean:
+
+1. Open `supabase/reset.sql`, read the warning at the top, and run it.
+2. Run `0001` through `0004` again in order.
+
+`reset.sql` drops and recreates the `public` schema. It does **not** touch your Auth users, your Storage files, or the public website. Do not run it once officers are actually using the system.
 
 ### Notices you can safely ignore
 

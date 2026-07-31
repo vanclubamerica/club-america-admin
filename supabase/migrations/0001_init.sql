@@ -16,20 +16,41 @@ create extension if not exists pgcrypto;
 -- -----------------------------------------------------------------------------
 -- Enums
 -- -----------------------------------------------------------------------------
-create type public.user_role as enum (
+do $$ begin
+  create type public.user_role as enum (
   'president',
   'vice_president',
   'secretary',
   'treasurer',
   'teacher_sponsor'
 );
+exception when duplicate_object then null;
+end $$;
 
-create type public.account_status as enum ('active', 'suspended', 'archived');
-create type public.officer_tier   as enum ('main', 'lower');
-create type public.sponsor_tier   as enum ('gold', 'silver', 'bronze');
-create type public.content_status as enum ('draft', 'published', 'archived');
-create type public.publish_status as enum ('pending', 'success', 'failed');
-create type public.event_source   as enum ('manual', 'google_calendar');
+do $$ begin
+  create type public.account_status as enum ('active', 'suspended', 'archived');
+exception when duplicate_object then null;
+end $$;
+do $$ begin
+  create type public.officer_tier as enum ('main', 'lower');
+exception when duplicate_object then null;
+end $$;
+do $$ begin
+  create type public.sponsor_tier as enum ('gold', 'silver', 'bronze');
+exception when duplicate_object then null;
+end $$;
+do $$ begin
+  create type public.content_status as enum ('draft', 'published', 'archived');
+exception when duplicate_object then null;
+end $$;
+do $$ begin
+  create type public.publish_status as enum ('pending', 'success', 'failed');
+exception when duplicate_object then null;
+end $$;
+do $$ begin
+  create type public.event_source as enum ('manual', 'google_calendar');
+exception when duplicate_object then null;
+end $$;
 
 -- -----------------------------------------------------------------------------
 -- Shared helpers
@@ -49,7 +70,7 @@ $$;
 -- =============================================================================
 -- profiles — one row per admin account, linked to Supabase Auth
 -- =============================================================================
-create table public.profiles (
+create table if not exists public.profiles (
   id                   uuid primary key references auth.users(id) on delete cascade,
   full_name            text not null,
   email                text not null unique,
@@ -74,16 +95,17 @@ create table public.profiles (
 );
 
 -- Exactly one owner can exist at a time.
-create unique index profiles_single_owner_idx on public.profiles (is_owner) where is_owner;
-create index profiles_status_idx on public.profiles (status);
+create unique index if not exists profiles_single_owner_idx on public.profiles (is_owner) where is_owner;
+create index if not exists profiles_status_idx on public.profiles (status);
 
+drop trigger if exists profiles_touch on public.profiles;
 create trigger profiles_touch before update on public.profiles
   for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- settings — single row of global configuration
 -- =============================================================================
-create table public.settings (
+create table if not exists public.settings (
   id                    boolean primary key default true check (id),
 
   publishing_enabled    boolean not null default true,
@@ -116,6 +138,7 @@ create table public.settings (
   updated_by            uuid references public.profiles(id) on delete set null
 );
 
+drop trigger if exists settings_touch on public.settings;
 create trigger settings_touch before update on public.settings
   for each row execute function public.touch_updated_at();
 
@@ -179,7 +202,7 @@ $$;
 -- =============================================================================
 -- content_blocks — prose regions keyed to markers in the public HTML
 -- =============================================================================
-create table public.content_blocks (
+create table if not exists public.content_blocks (
   key          text primary key,           -- matches <!-- cms:start KEY -->
   page         text not null,              -- 'about.html'
   label        text not null,              -- 'About — Introduction'
@@ -195,16 +218,17 @@ create table public.content_blocks (
   updated_by   uuid references public.profiles(id) on delete set null
 );
 
-create index content_blocks_page_idx on public.content_blocks (page, sort_order);
-create index content_blocks_draft_idx on public.content_blocks (key) where draft_data is not null;
+create index if not exists content_blocks_page_idx on public.content_blocks (page, sort_order);
+create index if not exists content_blocks_draft_idx on public.content_blocks (key) where draft_data is not null;
 
+drop trigger if exists content_blocks_touch on public.content_blocks;
 create trigger content_blocks_touch before update on public.content_blocks
   for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- officers
 -- =============================================================================
-create table public.officers (
+create table if not exists public.officers (
   id             uuid primary key default gen_random_uuid(),
   tier           public.officer_tier not null,
 
@@ -236,17 +260,18 @@ create table public.officers (
 );
 
 -- The five main slots exist exactly once each.
-create unique index officers_main_role_unique_idx
+create unique index if not exists officers_main_role_unique_idx
   on public.officers (role_key) where tier = 'main';
-create index officers_tier_order_idx on public.officers (tier, sort_order);
+create index if not exists officers_tier_order_idx on public.officers (tier, sort_order);
 
+drop trigger if exists officers_touch on public.officers;
 create trigger officers_touch before update on public.officers
   for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- sponsors
 -- =============================================================================
-create table public.sponsors (
+create table if not exists public.sponsors (
   id           uuid primary key default gen_random_uuid(),
   name         text not null,
   logo_path    text,            -- media/sponsors/<file>
@@ -263,15 +288,16 @@ create table public.sponsors (
   updated_by   uuid references public.profiles(id) on delete set null
 );
 
-create index sponsors_display_idx on public.sponsors (is_active, tier, sort_order);
+create index if not exists sponsors_display_idx on public.sponsors (is_active, tier, sort_order);
 
+drop trigger if exists sponsors_touch on public.sponsors;
 create trigger sponsors_touch before update on public.sponsors
   for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- news_posts
 -- =============================================================================
-create table public.news_posts (
+create table if not exists public.news_posts (
   id           uuid primary key default gen_random_uuid(),
   title        text not null,
   slug         text unique,
@@ -291,15 +317,16 @@ create table public.news_posts (
   updated_by   uuid references public.profiles(id) on delete set null
 );
 
-create index news_posts_feed_idx on public.news_posts (status, sort_pinned desc, published_on desc);
+create index if not exists news_posts_feed_idx on public.news_posts (status, sort_pinned desc, published_on desc);
 
+drop trigger if exists news_posts_touch on public.news_posts;
 create trigger news_posts_touch before update on public.news_posts
   for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- events — Google Calendar stays the source of truth; these are cache + manual
 -- =============================================================================
-create table public.events (
+create table if not exists public.events (
   id             uuid primary key default gen_random_uuid(),
   title          text not null,
   description    text,
@@ -316,17 +343,18 @@ create table public.events (
   updated_by     uuid references public.profiles(id) on delete set null
 );
 
-create unique index events_external_uid_idx on public.events (external_uid)
+create unique index if not exists events_external_uid_idx on public.events (external_uid)
   where external_uid is not null;
-create index events_upcoming_idx on public.events (starts_at) where not is_hidden;
+create index if not exists events_upcoming_idx on public.events (starts_at) where not is_hidden;
 
+drop trigger if exists events_touch on public.events;
 create trigger events_touch before update on public.events
   for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- documents
 -- =============================================================================
-create table public.documents (
+create table if not exists public.documents (
   id            uuid primary key default gen_random_uuid(),
   name          text not null,
   description   text,
@@ -343,15 +371,16 @@ create table public.documents (
   updated_at    timestamptz not null default now()
 );
 
-create index documents_category_idx on public.documents (category, created_at desc);
+create index if not exists documents_category_idx on public.documents (category, created_at desc);
 
+drop trigger if exists documents_touch on public.documents;
 create trigger documents_touch before update on public.documents
   for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- members + meetings + attendance
 -- =============================================================================
-create table public.members (
+create table if not exists public.members (
   id          uuid primary key default gen_random_uuid(),
   full_name   text not null,
   grade       int check (grade between 9 and 12),
@@ -366,12 +395,13 @@ create table public.members (
   updated_by  uuid references public.profiles(id) on delete set null
 );
 
-create index members_active_idx on public.members (is_active, full_name);
+create index if not exists members_active_idx on public.members (is_active, full_name);
 
+drop trigger if exists members_touch on public.members;
 create trigger members_touch before update on public.members
   for each row execute function public.touch_updated_at();
 
-create table public.meetings (
+create table if not exists public.meetings (
   id           uuid primary key default gen_random_uuid(),
   title        text not null,
   meeting_date date not null,
@@ -383,12 +413,13 @@ create table public.meetings (
   created_by   uuid references public.profiles(id) on delete set null
 );
 
-create index meetings_date_idx on public.meetings (meeting_date desc);
+create index if not exists meetings_date_idx on public.meetings (meeting_date desc);
 
+drop trigger if exists meetings_touch on public.meetings;
 create trigger meetings_touch before update on public.meetings
   for each row execute function public.touch_updated_at();
 
-create table public.attendance (
+create table if not exists public.attendance (
   meeting_id  uuid not null references public.meetings(id) on delete cascade,
   member_id   uuid not null references public.members(id) on delete cascade,
   present     boolean not null default false,
@@ -397,7 +428,7 @@ create table public.attendance (
   primary key (meeting_id, member_id)
 );
 
-create index attendance_member_idx on public.attendance (member_id);
+create index if not exists attendance_member_idx on public.attendance (member_id);
 
 -- Attendance percentage per member, used by the members + attendance screens.
 create or replace view public.member_attendance_stats as
@@ -419,7 +450,7 @@ group by m.id, m.full_name;
 -- =============================================================================
 -- themes — holiday/seasonal appearance presets
 -- =============================================================================
-create table public.themes (
+create table if not exists public.themes (
   key              text primary key,          -- 'normal', 'christmas', ...
   name             text not null,
   is_builtin       boolean not null default false,
@@ -437,13 +468,14 @@ create table public.themes (
   updated_by       uuid references public.profiles(id) on delete set null
 );
 
+drop trigger if exists themes_touch on public.themes;
 create trigger themes_touch before update on public.themes
   for each row execute function public.touch_updated_at();
 
 -- =============================================================================
 -- content_versions — immutable snapshots powering history / compare / restore
 -- =============================================================================
-create table public.content_versions (
+create table if not exists public.content_versions (
   id              uuid primary key default gen_random_uuid(),
   entity_type     text not null,        -- 'content_block' | 'officers' | 'site'
   entity_key      text not null,
@@ -456,13 +488,13 @@ create table public.content_versions (
   created_at      timestamptz not null default now()
 );
 
-create index content_versions_lookup_idx
+create index if not exists content_versions_lookup_idx
   on public.content_versions (entity_type, entity_key, version desc);
 
 -- =============================================================================
 -- publish_jobs — one row per publish attempt
 -- =============================================================================
-create table public.publish_jobs (
+create table if not exists public.publish_jobs (
   id             uuid primary key default gen_random_uuid(),
   status         public.publish_status not null default 'pending',
   commit_sha     text,
@@ -479,12 +511,12 @@ create table public.publish_jobs (
   finished_at    timestamptz
 );
 
-create index publish_jobs_recent_idx on public.publish_jobs (started_at desc);
+create index if not exists publish_jobs_recent_idx on public.publish_jobs (started_at desc);
 
 -- =============================================================================
 -- leadership_terms — archived rosters, one per school year
 -- =============================================================================
-create table public.leadership_terms (
+create table if not exists public.leadership_terms (
   id             uuid primary key default gen_random_uuid(),
   school_year    text not null,            -- '2026-2027'
   roster         jsonb not null,           -- frozen snapshot of officers + accounts
@@ -495,12 +527,12 @@ create table public.leadership_terms (
   archived_by_name text not null default 'System'
 );
 
-create unique index leadership_terms_year_idx on public.leadership_terms (school_year);
+create unique index if not exists leadership_terms_year_idx on public.leadership_terms (school_year);
 
 -- =============================================================================
 -- audit_logs — permanent, append-only activity trail
 -- =============================================================================
-create table public.audit_logs (
+create table if not exists public.audit_logs (
   id             bigint generated always as identity primary key,
   actor_id       uuid references public.profiles(id) on delete set null,
   actor_name     text not null,
@@ -517,14 +549,14 @@ create table public.audit_logs (
   created_at     timestamptz not null default now()
 );
 
-create index audit_logs_recent_idx  on public.audit_logs (created_at desc);
-create index audit_logs_actor_idx   on public.audit_logs (actor_id, created_at desc);
-create index audit_logs_section_idx on public.audit_logs (section, created_at desc);
+create index if not exists audit_logs_recent_idx  on public.audit_logs (created_at desc);
+create index if not exists audit_logs_actor_idx   on public.audit_logs (actor_id, created_at desc);
+create index if not exists audit_logs_section_idx on public.audit_logs (section, created_at desc);
 
 -- =============================================================================
 -- login_attempts + rate_limits — lockout and throttling, no external Redis
 -- =============================================================================
-create table public.login_attempts (
+create table if not exists public.login_attempts (
   id         bigint generated always as identity primary key,
   email      text not null,
   ip_address text,
@@ -532,17 +564,17 @@ create table public.login_attempts (
   created_at timestamptz not null default now()
 );
 
-create index login_attempts_email_idx on public.login_attempts (lower(email), created_at desc);
-create index login_attempts_ip_idx    on public.login_attempts (ip_address, created_at desc);
+create index if not exists login_attempts_email_idx on public.login_attempts (lower(email), created_at desc);
+create index if not exists login_attempts_ip_idx    on public.login_attempts (ip_address, created_at desc);
 
-create table public.rate_limits (
+create table if not exists public.rate_limits (
   bucket_key   text        not null,
   window_start timestamptz not null,
   hits         int         not null default 0,
   primary key (bucket_key, window_start)
 );
 
-create index rate_limits_window_idx on public.rate_limits (window_start);
+create index if not exists rate_limits_window_idx on public.rate_limits (window_start);
 
 -- Atomic fixed-window counter. Returns true when the request is allowed.
 create or replace function public.consume_rate_limit(
@@ -604,6 +636,7 @@ alter table public.rate_limits       enable row level security;
 
 -- --- profiles ----------------------------------------------------------------
 -- Everyone active can see the team roster (needed for the dashboard + transfer).
+drop policy if exists profiles_select on public.profiles;
 create policy profiles_select on public.profiles
   for select to authenticated
   using (public.is_active_admin());
@@ -611,23 +644,27 @@ create policy profiles_select on public.profiles
 -- You may edit your own name/phone. Role, status, and ownership are NOT
 -- editable here — those go through owner-gated server actions using the
 -- service role, so a self-update can never escalate privileges.
+drop policy if exists profiles_update_self on public.profiles;
 create policy profiles_update_self on public.profiles
   for update to authenticated
   using (id = auth.uid())
   with check (id = auth.uid());
 
 -- Only the owner (or break-glass sponsor) may manage other accounts.
+drop policy if exists profiles_owner_manage on public.profiles;
 create policy profiles_owner_manage on public.profiles
   for all to authenticated
   using (public.is_owner())
   with check (public.is_owner());
 
 -- --- settings ----------------------------------------------------------------
+drop policy if exists settings_select on public.settings;
 create policy settings_select on public.settings
   for select to authenticated
   using (public.is_active_admin());
 
 -- Emergency lock / publishing toggles are owner-only.
+drop policy if exists settings_owner_update on public.settings;
 create policy settings_owner_update on public.settings
   for update to authenticated
   using (public.is_owner())
@@ -645,17 +682,21 @@ begin
     'documents', 'members', 'meetings', 'attendance', 'themes'
   ]
   loop
-    execute format(
+    execute format('drop policy if exists %1$s_select on public.%1$s', t);
+      execute format(
       'create policy %1$s_select on public.%1$s
          for select to authenticated using (public.is_active_admin())', t);
-    execute format(
+    execute format('drop policy if exists %1$s_insert on public.%1$s', t);
+      execute format(
       'create policy %1$s_insert on public.%1$s
          for insert to authenticated with check (public.can_edit_content())', t);
-    execute format(
+    execute format('drop policy if exists %1$s_update on public.%1$s', t);
+      execute format(
       'create policy %1$s_update on public.%1$s
          for update to authenticated
          using (public.can_edit_content()) with check (public.can_edit_content())', t);
-    execute format(
+    execute format('drop policy if exists %1$s_delete on public.%1$s', t);
+      execute format(
       'create policy %1$s_delete on public.%1$s
          for delete to authenticated using (public.can_edit_content())', t);
   end loop;
@@ -663,18 +704,22 @@ end;
 $$;
 
 -- --- history tables: readable, never mutable from the client ------------------
+drop policy if exists content_versions_select on public.content_versions;
 create policy content_versions_select on public.content_versions
   for select to authenticated using (public.is_active_admin());
 
+drop policy if exists publish_jobs_select on public.publish_jobs;
 create policy publish_jobs_select on public.publish_jobs
   for select to authenticated using (public.is_active_admin());
 
+drop policy if exists leadership_terms_select on public.leadership_terms;
 create policy leadership_terms_select on public.leadership_terms
   for select to authenticated using (public.is_active_admin());
 
 -- --- audit_logs: readable by all admins, writable by NOBODY -------------------
 -- Inserts happen through the service role in server actions only. There is
 -- deliberately no insert/update/delete policy for `authenticated`.
+drop policy if exists audit_logs_select on public.audit_logs;
 create policy audit_logs_select on public.audit_logs
   for select to authenticated using (public.is_active_admin());
 
