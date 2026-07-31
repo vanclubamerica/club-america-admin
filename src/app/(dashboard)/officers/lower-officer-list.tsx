@@ -6,6 +6,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { deleteLowerOfficer, saveLowerOfficer } from './actions';
 import type { ActionState } from '@/lib/actions';
 import { Alert, Button, Card, CardBody, Field, Input, Textarea } from '@/components/ui';
+import { ImageInput } from '@/components/image-input';
 import type { Officer } from '@/types/database';
 
 function SaveButton({ label = 'Save' }: { label?: string }) {
@@ -71,7 +72,7 @@ function OfficerRow({ officer, storageBase }: { officer: Officer; storageBase: s
                   className="h-12 w-12 rounded-lg border border-ink-200 object-cover"
                 />
               )}
-              <Input type="file" name="photo" accept="image/png,image/jpeg,image/webp" />
+              <ImageInput name="photo" />
             </div>
           </Field>
 
@@ -128,7 +129,7 @@ function AddOfficerForm({ nextOrder }: { nextOrder: number }) {
           </Field>
 
           <Field label="Photo">
-            <Input type="file" name="photo" accept="image/png,image/jpeg,image/webp" />
+            <ImageInput name="photo" />
           </Field>
 
           <div className="flex justify-end gap-2">

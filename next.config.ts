@@ -75,8 +75,11 @@ const nextConfig: NextConfig = {
 
   experimental: {
     serverActions: {
-      // Uploads route through server actions; images are capped well below this.
-      bodySizeLimit: '8mb',
+      // Vercel rejects request bodies larger than 4.5 MB at the edge on every
+      // plan, before any application code runs — an over-limit upload becomes
+      // an uncatchable 413 and a client-side crash. Staying under that ceiling
+      // means our own validation is what users actually see.
+      bodySizeLimit: '4mb',
     },
   },
 };

@@ -6,6 +6,7 @@ import { Lock } from 'lucide-react';
 import { saveMainOfficer } from './actions';
 import type { ActionState } from '@/lib/actions';
 import { Alert, Button, Card, CardBody, Field, Input, Textarea } from '@/components/ui';
+import { ImageInput } from '@/components/image-input';
 import type { Officer } from '@/types/database';
 
 function SaveButton() {
@@ -68,7 +69,7 @@ export function MainOfficerCard({
             <Textarea name="bio" rows={3} defaultValue={officer?.bio ?? ''} />
           </Field>
 
-          <Field label="Photo" hint="PNG, JPG, or WebP, up to 5 MB. Leave empty to keep the current photo.">
+          <Field label="Photo" hint="PNG, JPG, or WebP. Large photos are resized automatically. Leave empty to keep the current photo.">
             <div className="flex items-center gap-3">
               {photoUrl && (
                 // Plain <img>: these are Supabase Storage URLs, and next/image
@@ -80,7 +81,7 @@ export function MainOfficerCard({
                   className="h-14 w-14 rounded-lg border border-ink-200 object-cover"
                 />
               )}
-              <Input type="file" name="photo" accept="image/png,image/jpeg,image/webp" />
+              <ImageInput name="photo" />
             </div>
           </Field>
 

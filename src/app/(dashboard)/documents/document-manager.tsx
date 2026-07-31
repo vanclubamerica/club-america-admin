@@ -105,7 +105,7 @@ export function DocumentManager({ documents }: { documents: DocumentRecord[] }) 
                 <Textarea name="description" rows={2} />
               </Field>
 
-              <Field label="File" hint="PDF, Word, Excel, text, or image. Up to 20 MB.">
+              <Field label="File" hint="PDF, Word, Excel, text, or image. Up to 4 MB.">
                 <Input type="file" name="file" required />
               </Field>
 

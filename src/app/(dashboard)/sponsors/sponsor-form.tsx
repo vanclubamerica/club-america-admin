@@ -16,6 +16,7 @@ import {
   Select,
   Textarea,
 } from '@/components/ui';
+import { ImageInput } from '@/components/image-input';
 import type { Sponsor, SponsorTier } from '@/types/database';
 
 const TIER_TONE: Record<SponsorTier, 'warning' | 'neutral' | 'info'> = {
@@ -147,8 +148,8 @@ function SponsorRow({ sponsor, storageBase }: { sponsor: Sponsor; storageBase: s
               <input type="hidden" name="id" value={sponsor.id} />
               <SponsorFields sponsor={sponsor} />
 
-              <Field label="Replace logo" hint="PNG, JPG, or WebP up to 5 MB. Leave empty to keep the current one.">
-                <Input type="file" name="logo" accept="image/png,image/jpeg,image/webp" />
+              <Field label="Replace logo" hint="PNG, JPG, or WebP. Large images are resized automatically. Leave empty to keep the current one.">
+                <ImageInput name="logo" />
               </Field>
 
               <div className="flex justify-end">
@@ -195,8 +196,8 @@ function AddSponsorForm({ nextOrder }: { nextOrder: number }) {
 
           <SponsorFields />
 
-          <Field label="Logo" hint="PNG, JPG, or WebP up to 5 MB. Wide logos look best.">
-            <Input type="file" name="logo" accept="image/png,image/jpeg,image/webp" />
+          <Field label="Logo" hint="PNG, JPG, or WebP. Large images are resized automatically. Wide logos look best.">
+            <ImageInput name="logo" />
           </Field>
 
           <div className="flex justify-end gap-2">

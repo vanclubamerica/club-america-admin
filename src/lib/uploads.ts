@@ -87,8 +87,18 @@ export const DOCUMENT_MIME_ALLOWLIST = [
   'image/jpeg',
 ];
 
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5 MB
-export const MAX_DOCUMENT_BYTES = 20 * 1024 * 1024; // 20 MB
+/**
+ * Both ceilings sit below Vercel's hard 4.5 MB request-body limit, which
+ * applies on every plan and rejects oversized uploads at the edge before this
+ * code runs. Exceeding it produces a 413 the application cannot catch or
+ * explain, so the app's own limits must stay under it.
+ *
+ * Images are shrunk in the browser first (see components/image-input.tsx), so
+ * in practice photos arrive well under 500 KB and this is only a backstop.
+ * Documents cannot be compressed, so 4 MB is a real limit for PDFs.
+ */
+export const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // 4 MB
+export const MAX_DOCUMENT_BYTES = 4 * 1024 * 1024; // 4 MB
 
 export interface ValidationResult {
   ok: boolean;
