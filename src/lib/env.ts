@@ -18,10 +18,18 @@ const publicSchema = z.object({
 });
 
 // Next.js inlines process.env.NEXT_PUBLIC_* at build time only for statically
-// analysable member expressions, so these must be written out longhand.
+// analysable member expressions, so these must be written out longhand — which
+// is also why both spellings below are written in full rather than looked up
+// dynamically.
+//
+// Supabase renamed its keys: what used to be "anon" is now "publishable", and
+// "service_role" is now "secret". Same privileges, new labels. Both names are
+// accepted so a project set up under either generation of the dashboard works.
 const parsedPublic = publicSchema.safeParse({
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY:
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   NEXT_PUBLIC_ADMIN_URL: process.env.NEXT_PUBLIC_ADMIN_URL,
   NEXT_PUBLIC_SUPPORT_NAME: process.env.NEXT_PUBLIC_SUPPORT_NAME,
@@ -70,7 +78,9 @@ export function serverEnv(): ServerEnv {
   if (cachedServerEnv) return cachedServerEnv;
 
   const parsed = serverSchema.safeParse({
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    // "secret key" is Supabase's current name for the service_role key.
+    SUPABASE_SERVICE_ROLE_KEY:
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY,
     GITHUB_TOKEN: process.env.GITHUB_TOKEN || undefined,
     GITHUB_OWNER: process.env.GITHUB_OWNER,
     GITHUB_REPO: process.env.GITHUB_REPO,

@@ -48,7 +48,9 @@ async function main() {
   console.log(`\n${c.bold}${c.cyan}Club America — seed content into Supabase${c.reset}\n`);
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // "secret key" is Supabase's current name for the service_role key.
+  const serviceKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
 
   if (!url || !serviceKey) {
     fail(

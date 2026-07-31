@@ -73,8 +73,12 @@ The difference: a **NOTICE** is informational and the migration continued. An **
 | Setting | Where it goes | Notes |
 |---|---|---|
 | **Project URL** | `NEXT_PUBLIC_SUPABASE_URL` | Safe to share |
-| **anon / public key** | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Safe to share — protected by Row Level Security |
-| **service_role key** | `SUPABASE_SERVICE_ROLE_KEY` | **SECRET.** Bypasses all security rules |
+| **Publishable key** (`sb_publishable_…`) | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Safe to share — protected by Row Level Security |
+| **Secret key** (`sb_secret_…`) | `SUPABASE_SERVICE_ROLE_KEY` | **SECRET.** Bypasses all security rules |
+
+> **If your dashboard says "anon" and "service_role" instead:** those are the older names for exactly the same two keys. `anon` → publishable, `service_role` → secret. Either generation works.
+>
+> The variable names above keep the older spelling for consistency with Supabase's own SDK examples, but the app also accepts `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SECRET_KEY` if you would rather match what your dashboard shows.
 
 3. Copy `.env.example` to `.env.local` and paste them in.
 
